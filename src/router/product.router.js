@@ -39,7 +39,7 @@ router.post('/products', async (req, res) => {
   await Products.sync() // SI la tabla no esta creada, la crea
   const createProduct = await Products.create({
     product_name: dataProducts.product_name,
-    price: dataProducts.price,
+    price: Number(dataProducts.price),
     is_stock: dataProducts.is_stock
   })
   res.status(201).json({ //Cuando esta Response se ejecuta significa que el producto fue creado
@@ -61,6 +61,25 @@ router.put('/products/:product_id', async (req, res) => {  //Se usa Put para act
   }, {
     where: {
       product_id: id
+    }
+  });
+  res.status(200).json({ //Cuando esta Response se ejecuta significa que el producto fue creado
+    ok: true,
+    status: 200,
+    body: updateProduct,
+    message: "Updated Product"
+  })
+});
+
+router.patch('/products/:product_name', async (req, res) => {  //Se usa Patch para actualizar No todos los atributos de un elemento 
+  const name = req.params.product_name;
+  const dataProducts = req.body;
+  const updateProduct = await Products.update({
+    price: dataProducts.price,
+    is_stock: dataProducts.is_stock
+  }, {
+    where: {
+      product_name: name
     }
   });
   res.status(200).json({ //Cuando esta Response se ejecuta significa que el producto fue creado
